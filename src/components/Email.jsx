@@ -9,7 +9,7 @@ export const Email = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://office-backend-mauve.vercel.app/'; // Fallback to localhost if not set
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://office-backend-mauve.vercel.app'; // Fallback to localhost if not set
 
   // Notify visitor on component mount
   useEffect(() => {
